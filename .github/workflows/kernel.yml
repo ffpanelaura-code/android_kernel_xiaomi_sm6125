@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y bc bison build-essential flex libelf-dev libssl-dev wget zip curl
+          sudo apt-get install -y bc bison build-essential flex libelf-dev libssl-dev wget zip curl libncurses5-dev
 
       - name: Clone Clang Toolchain
         run: |
@@ -23,7 +23,6 @@ jobs:
 
       - name: Prepare Config
         run: |
-          # Apnar modified config-ti jodi vendor/ folder-e thake, take main configs folder-e copy kore ginkgo_defconfig namkoron kora
           if [ -f "arch/arm64/configs/vendor/ginkgo.config" ]; then
             cp arch/arm64/configs/vendor/ginkgo.config arch/arm64/configs/ginkgo_defconfig
           elif [ -f "arch/arm64/configs/ginkgo.config" ]; then
@@ -40,7 +39,7 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-gnu-
           
           make O=out ginkgo_defconfig
-          make O=out -j$(nproc)
+          make O=out -j$(nproc) HOSTCC=clang HOSTCXX=clang++ CC=clang
 
       - name: Upload Kernel Artifact
         uses: actions/upload-artifact@v4
