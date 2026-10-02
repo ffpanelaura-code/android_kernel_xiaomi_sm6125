@@ -30,7 +30,8 @@ jobs:
           export CLANG_TRIPLE=aarch64-linux-gnu-
           export CROSS_COMPILE=aarch64-linux-gnu-
           
-          make O=out ginkgo_defconfig
+          # Apnar config file jehethu ginkgo.config namhe ache, tai ekhane seta use kora holo
+          make O=out ginkgo.config
           make O=out -j$(nproc)
 
       - name: Upload Kernel Artifact
