@@ -34,13 +34,16 @@ jobs:
           wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -O gcc-32.tar.gz
           mkdir -p gcc-32 && tar -xzf gcc-32.tar.gz -C gcc-32
 
-      - name: Prepare Config
+      - name: Prepare Config & Patch Sources
         run: |
           if [ -f "arch/arm64/configs/vendor/ginkgo.config" ]; then
             cp arch/arm64/configs/vendor/ginkgo.config arch/arm64/configs/ginkgo_defconfig
           elif [ -f "arch/arm64/configs/ginkgo.config" ]; then
             cp arch/arm64/configs/ginkgo.config arch/arm64/configs/ginkgo_defconfig
           fi
+
+          # Fix compat_uptr_t error for Clang build
+          sed -i 's/compat_uptr_t/u32/g' include/linux/filter.h
 
       - name: Build Kernel
         run: |
