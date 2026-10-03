@@ -19,13 +19,15 @@ jobs:
 
       - name: Download Toolchain
         run: |
-          echo "Downloading Snapdragon LLVM / Clang..."
-          # Using a reliable direct tarball release for aarch64 toolchain
-          wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-11.0.0_r3/clang-r383902b.tar.gz -O clang.tar.gz || \
-          wget -q https://github.com/kdrag0n/proton-clang/archive/refs/heads/master.zip -O clang.zip && unzip -q clang.zip && mv proton-clang-master clang-toolchain
+          echo "Setting up Toolchain directory..."
+          rm -rf clang-toolchain clang.tar.gz clang.zip
+          
+          echo "Downloading LLVM / Clang..."
+          wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-11.0.0_r3/clang-r383902b.tar.gz -O clang.tar.gz
 
           if [ -f "clang.tar.gz" ]; then
-            mkdir clang-toolchain && tar -xzf clang.tar.gz -C clang-toolchain
+            mkdir -p clang-toolchain
+            tar -xzf clang.tar.gz -C clang-toolchain
           fi
 
       - name: Prepare Config
