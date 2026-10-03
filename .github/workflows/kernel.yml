@@ -40,6 +40,9 @@ jobs:
           # Fix unsupported NR_CPUS for lb tracepoint error
           sed -i '/Unsupported NR_CPUS for lb tracepoint/s/^/\/\//' include/trace/events/sched.h
 
+          # Fix bpf_stats_handler undeclared identifier error in kernel/sysctl.c
+          sed -i 's/bpf_stats_handler/NULL/g' kernel/sysctl.c
+
       - name: Build Kernel
         run: |
           export PATH="$(pwd)/clang-toolchain/bin:$PATH"
