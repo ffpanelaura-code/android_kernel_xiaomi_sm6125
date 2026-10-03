@@ -19,7 +19,7 @@ jobs:
 
       - name: Clone Clang Toolchain
         run: |
-          git clone --depth=1 https://gitlab.com/ThankYouMario/android_prebuilts_clang_host_linux-x86_clang-r416183b.git clang-toolchain
+          git clone --depth=1 https://github.com/chenxiaolong/Clang-12.0.1.git clang-toolchain
 
       - name: Prepare Config
         run: |
@@ -36,8 +36,7 @@ jobs:
           export SUBARCH=arm64
           export CC=clang
           export CLANG_TRIPLE=aarch64-linux-gnu-
-          export CROSS_COMPILE=aarch64-linux-android-
-          export CROSS_COMPILE_ARM32=arm-linux-androideabi-
+          export CROSS_COMPILE=aarch64-linux-gnu-
           
           make O=out ginkgo_defconfig
           make O=out -j$(nproc) CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu-
