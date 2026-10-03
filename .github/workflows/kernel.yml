@@ -15,11 +15,7 @@ jobs:
       - name: Setup Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y bc bison build-essential flex libelf-dev libssl-dev wget zip curl libncurses5-dev binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi
-
-      - name: Clone Clang Toolchain
-        run: |
-          git clone --depth=1 https://github.com/chenxiaolong/Clang-12.0.1.git clang-toolchain
+          sudo apt-get install -y bc bison build-essential flex libelf-dev libssl-dev wget zip curl libncurses5-dev binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi clang llvm lld
 
       - name: Prepare Config
         run: |
@@ -31,15 +27,15 @@ jobs:
 
       - name: Build Kernel
         run: |
-          export PATH="$(pwd)/clang-toolchain/bin:$PATH"
           export ARCH=arm64
           export SUBARCH=arm64
           export CC=clang
+          export LD=ld.lld
           export CLANG_TRIPLE=aarch64-linux-gnu-
           export CROSS_COMPILE=aarch64-linux-gnu-
           
           make O=out ginkgo_defconfig
-          make O=out -j$(nproc) CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu-
+          make O=out -j$(nproc) CC=clang LD=ld.lld CROSS_COMPILE=aarch64-linux-gnu-
 
       - name: Upload Kernel Artifact
         uses: actions/upload-artifact@v4
