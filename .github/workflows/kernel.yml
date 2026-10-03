@@ -17,11 +17,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y bc bison build-essential flex libelf-dev libssl-dev wget zip curl libncurses5-dev
 
-      - name: Clone Toolchains
+      - name: Download Toolchains
         run: |
-          git clone --depth=1 https://github.com/chenxiaolong/Clang-12.0.1.git clang-toolchain
-          git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 gcc-64
-          git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 gcc-32
+          echo "Downloading Clang 12..."
+          wget -q https://github.com/chenxiaolong/Clang-12.0.1/archive/refs/heads/master.zip -O clang.zip
+          unzip -q clang.zip
+          mv Clang-12.0.1-master clang-toolchain
+
+          echo "Downloading GCC 64-bit..."
+          wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -O gcc-64.tar.gz
+          mkdir gcc-64 && tar -xzf gcc-64.tar.gz -C gcc-64
+
+          echo "Downloading GCC 32-bit..."
+          wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -O gcc-32.tar.gz
+          mkdir gcc-32 && tar -xzf gcc-32.tar.gz -C gcc-32
 
       - name: Prepare Config
         run: |
