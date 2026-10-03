@@ -37,6 +37,9 @@ jobs:
           # Fix compat_uptr_t error for Clang build
           sed -i 's/compat_uptr_t/u32/g' include/linux/filter.h
 
+          # Fix unsupported NR_CPUS for lb tracepoint error
+          sed -i '/Unsupported NR_CPUS for lb tracepoint/s/^/\/\//' include/trace/events/sched.h
+
       - name: Build Kernel
         run: |
           export PATH="$(pwd)/clang-toolchain/bin:$PATH"
